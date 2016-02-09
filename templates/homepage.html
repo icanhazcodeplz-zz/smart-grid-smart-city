@@ -1,0 +1,23 @@
+<!doctype html>
+<title>SGSC Visualizer</title>
+<link rel=stylesheet type=text/css href='{{ url_for('static',filename='style.css')}}'>
+<div class=page>
+  <h1><i>Smart Grid, Smart City</i> Visualizer</h1>
+  <div class=metanav>
+
+<h4>
+Below is an example of the type of filters you will be able to use to generate plots. For now clicking 'Generate Plot' simply redirects to a previously made plot.
+</h4>
+
+
+<form id='userinfoform' method='post' action='index' >
+   <select name="han_item">
+     <option value="dishwasher">Dishwasher</option>
+     <option value="dryer">Dryer</option>
+   </select>
+   <input type='submit' value='Generate Plot' />
+   </p>
+</form>
+
+</div>
+</div>
