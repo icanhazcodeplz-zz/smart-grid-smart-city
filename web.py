@@ -1,35 +1,49 @@
+from flask import Flask, render_template, request, redirect, url_for
+import sgsc
 import os
-from flask import Flask, render_template, request, redirect
-# from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/[YOUR_DATABASE_NAME]'
-# db = SQLAlchemy(app)
+
+# Get hard-coded list of customers that have at least 3 different HAN plugs
+f = open('data/customer_ids.txt', 'r')
+c_keys = f.read().split(',')
+
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
-        return render_template('homepage.html')
+        return render_template('homepage.html', c_keys=c_keys)
     else:
-        han_item = request.form['han_item']
-        if han_item == 'dishwasher':
-            return redirect('/dishwasher')
-        elif han_item == 'dryer':
-            return redirect('/dryer')
+        customer_id = request.form['customer_id']
+        plug_list = sgsc.get_and_save_han(customer_id.strip())
+        return redirect(
+            # TODO figure out how to pass an array.
+            url_for('.select_plug', plug_list=str(plug_list)[1:-2]))
 
 
-@app.route('/dishwasher')
-def dishwasher():
-    return render_template('10014678_Dishwasher.html')
+@app.route('/select_plug', methods=['GET', 'POST'])
+def select_plug():
+    if request.method == 'GET':
+        plug_list = request.args['plug_list']
+        #TODO figure out how to pass an array.
+        plug_list = plug_list.replace(" '", '')
+        plug_list = plug_list.replace("'", '')
+        plug_list = plug_list.split(',')
+        return render_template('/select_plug.html', plug_list=plug_list)
+    else:
+        plug = request.form['plug']
+        return redirect(url_for('.plot', plug=plug))
 
 
-@app.route('/dryer')
-def dryer():
-    return render_template('10050432_Dryer.html')
+@app.route('/plot', methods=['GET', 'POST'])
+def plot():
+    if request.method == 'GET':
+        plug = request.args['plug']
+        sgsc.static_bar_plot(plug)
+        return render_template('/plot.html')
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-    # app.run(debug=False)
-
+    app.run(host='0.0.0.0', port=port)  # , debug=True)
+    # app.run(debug=True)

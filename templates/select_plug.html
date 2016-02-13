@@ -1,0 +1,19 @@
+<!doctype html>
+<title>SGSC Visualizer</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static',filename='style.css')}}">
+<div class=page>
+    <h1><i>Smart Grid, Smart City</i> Visualizer</h1>
+    <div class=metanav>
+        <h4>
+            Select the plug name you want to plot.
+        </h4>
+        <form id='plug_select' method='post' action='select_plug'>
+            <select name="plug" width="300px">
+                {% for p in plug_list %}
+                <option value="{{ p }}" SELECTED>{{ p }}</option>
+                {% endfor %}
+            </select>
+            <input type='submit' value='Select Plug'/>
+        </form>
+    </div>
+</div>
