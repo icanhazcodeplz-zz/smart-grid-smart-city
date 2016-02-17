@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sgsc
-import os
 
 app = Flask(__name__)
 
@@ -17,19 +16,21 @@ def index():
         customer_id = request.form['customer_id']
         plug_list = sgsc.get_and_save_han(customer_id.strip())
         return redirect(
-            # TODO figure out how to pass an array.
-            url_for('.select_plug', plug_list=str(plug_list)[1:-2]))
+                # TODO figure out how to pass an array.
+                url_for('.select_plug', plug_list=str(plug_list)[1:-2],
+                        customer_id=customer_id))
 
 
 @app.route('/select_plug', methods=['GET', 'POST'])
 def select_plug():
     if request.method == 'GET':
         plug_list = request.args['plug_list']
-        #TODO figure out how to pass an array.
+        # TODO figure out how to pass an array.
         plug_list = plug_list.replace(" '", '')
         plug_list = plug_list.replace("'", '')
         plug_list = plug_list.split(',')
-        return render_template('/select_plug.html', plug_list=plug_list)
+        return render_template('/select_plug.html', plug_list=plug_list,
+                               customer_id=request.args['customer_id'])
     else:
         plug = request.form['plug']
         return redirect(url_for('.plot', plug=plug))
