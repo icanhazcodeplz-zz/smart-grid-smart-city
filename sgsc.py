@@ -14,7 +14,6 @@ import pandas as pd
 from bokeh.charts import Bar, output_file, save
 from datetime import datetime
 import json
-
 import urllib.request
 
 
@@ -29,6 +28,7 @@ def get_hour_from_timeseries(ts):
 def get_and_save_han(customer_id):
     limit = 32000
     # TODO figure out how to speed up query so we can get all data
+    # TODO check timezone.
     limit = 5000
     han_url = "http://data.gov.au/api/action/datastore_search?resource_id" \
               "=63d2b1cd-f453-4440-8bb7-ed083326f5ae&q=%s&limit=%s" % (
@@ -77,7 +77,9 @@ def static_bar_plot(plug):
     customer = han2.CUSTOMER_ID.unique()[0]
     plug = han2.PLUG_NAME.unique()[0]
     output_file("templates/plot.html")
-    p = Bar(han2, 'HOUR', values='READING_DELTA',
+    p = Bar(han2, 'HOUR',
+            values='READING_DELTA',
             title="Total Energy Used from %s to %s" % (start_time, end_time),
-            ylabel="kWh, %s at site %s" % (plug, customer))
+            ylabel="kWh Consumed, %s at site %s" % (plug, customer),
+            xlabel='Hour in Day (5 means 5:00am to 5:59am)')
     save(p)
