@@ -5,7 +5,7 @@
     <h1><i>Smart Grid, Smart City</i> Visualizer</h1>
     <div class=metanav>
         <h4>
-            Select the plug name you want to plot.
+            Select the plug name from customer site number {{ customer_id }} you want to plot.
         </h4>
         <form id='plug_select' method='post' action='select_plug'>
             <select name="plug" width="300px">
@@ -13,7 +13,7 @@
                 <option value="{{ p }}" SELECTED>{{ p }}</option>
                 {% endfor %}
             </select>
-            <input type='submit' value='Select Plug'/>
+            <input type='submit' value='Plot data from plug'/>
         </form>
     </div>
 </div>
