@@ -6,8 +6,7 @@ Purpose: Generate plots of energy consumption using the Smart Grid, Smart City
     dataset.
 
 Notes:
-    -Tested on Python 3.4.3.
-    -Developed using iPython notebook. Converted to .py at the end.
+    -
 """
 import numpy as np
 import pandas as pd
@@ -83,3 +82,42 @@ def static_bar_plot(plug):
             ylabel="kWh Consumed, %s at site %s" % (plug, customer),
             xlabel='Hour in Day (5 means 5:00am to 5:59am)')
     save(p)
+
+
+
+# get_and_save_han('9120805')
+
+# print("END")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
