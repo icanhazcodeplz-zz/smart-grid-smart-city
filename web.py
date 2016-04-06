@@ -15,7 +15,7 @@ def index():
         return render_template('homepage.html', c_keys=c_keys)
     else:
         customer_id = request.form['customer_id']
-        plug_list = sgsc.get_and_save_han(customer_id.strip())
+        plug_list = sgsc.get_and_save_han_dynamo(customer_id.strip())
         return redirect(
                 # TODO figure out how to pass an array.
                 url_for('.select_plug', plug_list=str(plug_list)[1:-2],

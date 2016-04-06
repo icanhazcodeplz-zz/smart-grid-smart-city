@@ -14,6 +14,8 @@ from bokeh.charts import Bar, output_file, save
 from datetime import datetime
 import json
 import urllib.request
+import boto3
+from boto3.dynamodb.conditions import Key
 
 
 def convert_to_datetime(t):
@@ -49,6 +51,36 @@ def get_and_save_han(customer_id):
     return plug_list
 
 
+def get_and_save_han_dynamo(customer_id):
+    dynamo = boto3.resource('dynamodb')
+    table = dynamo.Table('han10082576')
+    fe = Key('CUSTOMER_ID').eq('10082576')
+    pe = "PLUG_NAME, READING_VALUE, READING_TIME"
+    response = table.scan(
+            FilterExpression=fe,
+            ProjectionExpression=pe,
+    )
+    data = response['Items']
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+                ProjectionExpression=pe,
+                FilterExpression=fe,
+                ExclusiveStartKey=response['LastEvaluatedKey']
+        )
+        data += response['Items']
+    han = pd.DataFrame(data)
+    han = han.sort('READING_TIME')
+    epochs = han.READING_TIME.apply(lambda x: datetime.fromtimestamp(int(x)))
+    han['READING_DATETIME'] = epochs
+    han["HOUR"] = han.READING_DATETIME.apply(lambda x: x.hour)
+
+    han = han.reset_index()
+    han.to_pickle('data/han')
+    plug_list = han.PLUG_NAME.unique().tolist()
+    return plug_list
+
+
 def prepare_han2(plug):
     han = pd.read_pickle('data/han')
     han2 = han[han.PLUG_NAME == plug]
@@ -71,9 +103,10 @@ def prepare_han2(plug):
 
 def static_bar_plot(plug):
     han2 = prepare_han2(plug)
-    start_time = han2.head(1).READING_TIME.as_matrix()[0][:-9]
-    end_time = han2.tail(1).READING_TIME.as_matrix()[0][:-9]
-    customer = han2.CUSTOMER_ID.unique()[0]
+    start_time = str(han2.head(1).READING_DATETIME.values[0])[:10]
+    end_time = str(han2.tail(1).READING_DATETIME.values[0])[:10]
+    # customer = han2.CUSTOMER_ID.unique()[0]
+    customer = '10082576'  # FIXME
     plug = han2.PLUG_NAME.unique()[0]
     output_file("templates/plot.html")
     p = Bar(han2, 'HOUR',
@@ -83,41 +116,10 @@ def static_bar_plot(plug):
             xlabel='Hour in Day (5 means 5:00am to 5:59am)')
     save(p)
 
-
-
+# plugs = get_and_save_han_dynamo('hi')
+# static_bar_plot(plugs[0])
+# df = pd.DataFrame.from_csv('SGSC-CTHANPlug-Readings.csv')
+# df.to_pickle('data/all_han')
+# print(df.head())
 # get_and_save_han('9120805')
-
 # print("END")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
