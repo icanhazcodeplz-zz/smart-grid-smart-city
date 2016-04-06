@@ -52,8 +52,11 @@ def get_and_save_han(customer_id):
 
 
 def get_and_save_han_dynamo(customer_id):
+    print("sgsc line 55")
     dynamo = boto3.resource('dynamodb')
+    print("sgsc line 57")
     table = dynamo.Table('han10082576')
+    print("sgsc line 60")
     fe = Key('CUSTOMER_ID').eq('10082576')
     pe = "PLUG_NAME, READING_VALUE, READING_TIME"
     response = table.scan(
