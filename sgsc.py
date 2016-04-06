@@ -53,9 +53,15 @@ def get_and_save_han(customer_id):
 
 
 def get_and_save_han_dynamo(customer_id):
-    os.system("env")
+    envs = os.environ
+    key = envs['AWS_ACCESS_KEY_ID']
+    secret = envs['AWS_SECRET_ACCESS_KEY']
+    print(key)
+    print(secret)
+    # os.system("env")
     print("sgsc line 55")
-    dynamo = boto3.resource('dynamodb')
+    dynamo = boto3.resource('dynamodb', aws_access_key_id=key,
+                            aws_secret_access_key=secret)
     print("sgsc line 57")
     table = dynamo.Table('han10082576')
     print("sgsc line 60")
@@ -121,10 +127,10 @@ def static_bar_plot(plug):
             xlabel='Hour in Day (5 means 5:00am to 5:59am)')
     save(p)
 
-# plugs = get_and_save_han_dynamo('hi')
-# static_bar_plot(plugs[0])
-# df = pd.DataFrame.from_csv('SGSC-CTHANPlug-Readings.csv')
-# df.to_pickle('data/all_han')
-# print(df.head())
-# get_and_save_han('9120805')
-# print("END")
+    # plugs = get_and_save_han_dynamo('hi')
+    # static_bar_plot(plugs[0])
+    # df = pd.DataFrame.from_csv('SGSC-CTHANPlug-Readings.csv')
+    # df.to_pickle('data/all_han')
+    # print(df.head())
+    # get_and_save_han('9120805')
+    # print("END")
