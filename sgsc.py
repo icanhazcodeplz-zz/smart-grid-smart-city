@@ -16,6 +16,7 @@ import json
 import urllib.request
 import boto3
 from boto3.dynamodb.conditions import Key
+import os
 
 
 def convert_to_datetime(t):
@@ -52,6 +53,7 @@ def get_and_save_han(customer_id):
 
 
 def get_and_save_han_dynamo(customer_id):
+    os.system("env")
     print("sgsc line 55")
     dynamo = boto3.resource('dynamodb')
     print("sgsc line 57")
