@@ -63,8 +63,7 @@ def get_and_save_han_dynamo(customer_id):
     print("sgsc line 55")
     print(type(boto3))
     try:
-        client = boto3.client('dynamodb', aws_access_key_id=key,
-                            aws_secret_access_key=secret,region_name='us-west-1')
+        client = boto3.client('dynamodb',region_name='us-west-1')
     except:
         print(sys.exc_info()[0])
     print(type(client))
