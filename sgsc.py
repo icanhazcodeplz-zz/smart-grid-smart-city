@@ -16,8 +16,6 @@ import json
 import urllib.request
 import boto3
 from boto3.dynamodb.conditions import Key
-import os
-import sys
 
 
 def convert_to_datetime(t):
@@ -54,24 +52,8 @@ def get_and_save_han(customer_id):
 
 
 def get_and_save_han_dynamo(customer_id):
-    envs = os.environ
-    key = envs['AWS_ACCESS_KEY_ID']
-    secret = envs['AWS_SECRET_ACCESS_KEY']
-    print(key)
-    print(secret)
-    # os.system("env")
-    print("sgsc line 55")
-    print(type(boto3))
-    try:
-        client = boto3.client('dynamodb',region_name='us-west-1')
-    except:
-        print(sys.exc_info()[0])
-    print(type(client))
-    dynamo = boto3.resource('dynamodb', aws_access_key_id=key,
-                            aws_secret_access_key=secret,region_name='us-west-1')
-    print("sgsc line 57")
+    dynamo = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamo.Table('han10082576')
-    print("sgsc line 60")
     fe = Key('CUSTOMER_ID').eq('10082576')
     pe = "PLUG_NAME, READING_VALUE, READING_TIME"
     response = table.scan(
@@ -141,4 +123,3 @@ def static_bar_plot(plug):
     # print(df.head())
     # get_and_save_han('9120805')
     # print("END")
-# get_and_save_han_dynamo('hi')
