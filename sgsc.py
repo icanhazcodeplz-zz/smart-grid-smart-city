@@ -62,7 +62,7 @@ def get_and_save_han_dynamo(customer_id):
     print("sgsc line 55")
     print(type(boto3))
     client = boto3.client('dynamodb', aws_access_key_id=key,
-                            aws_secret_access_key=secret)
+                            aws_secret_access_key=secret,region_name='us-west-1')
     print(type(client))
     dynamo = boto3.resource('dynamodb', aws_access_key_id=key,
                             aws_secret_access_key=secret)
@@ -138,3 +138,4 @@ def static_bar_plot(plug):
     # print(df.head())
     # get_and_save_han('9120805')
     # print("END")
+get_and_save_han_dynamo('hi')
